@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { ProjectStatus } from "@/components/dashboard/project-card";
 import {
   Dialog,
   DialogContent,
@@ -13,13 +12,10 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import type { ProjectStatus, CreateProjectInput, } from "@/lib/types/project";
 
 type CreateProjectDialogProps = {
-  onCreate: (project: {
-    name: string;
-    description: string;
-    status: ProjectStatus;
-  }) => void;
+  onCreate: (project: CreateProjectInput) => void;
 }
 
 export default function CreateProjectDialog({
@@ -49,7 +45,7 @@ export default function CreateProjectDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger render={<Button />}>
         <Button>Create Project</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">

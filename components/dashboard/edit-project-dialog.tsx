@@ -1,6 +1,5 @@
 "use client";
 
-import type { ProjectStatus } from "./project-card";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import type { ProjectStatus, CreateProjectInput, } from "@/lib/types/project";
 
 type EditProjectDialogProps = {
   project: {
@@ -19,11 +19,7 @@ type EditProjectDialogProps = {
     description: string;
     status: ProjectStatus;
   };
-  onEdit: (project: {
-    name: string;
-    description: string;
-    status: ProjectStatus;
-  }) => void;
+  onEdit: (project: CreateProjectInput) => void;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
