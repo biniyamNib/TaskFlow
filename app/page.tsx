@@ -1,14 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import StatCard from "@/components/dashboard/stat-card";
 import AppSidebar from "@/components/layout/app-sidebar";
 import AppHeader from "@/components/layout/app-header";
 import { Input } from "@/components/ui/input";
 import CreateProjectDialog from "@/components/dashboard/create-project-dialog";
-import ProjectCard, {
-  type ProjectStatus,
-} from "@/components/dashboard/project-card";
+import ProjectCard from "@/components/dashboard/project-card";
+import type { CreateProjectInput } from "@/lib/types/project";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,42 +19,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { EditProjectDialog } from "@/components/dashboard/edit-project-dialog";
+import { useProjects } from "@/hooks/use-projects"; 
 
 export default function Home() {
-  const [projects, setProjects] = useState<
-    {
-      id: number;
-      name: string;
-      description: string;
-      status: ProjectStatus;
-    }[]
-  >([
-    {
-      id: 1,
-      name: "Website Redesign",
-      description: "Redesign the company website",
-      status: "In Progress",
-    },
-    {
-      id: 2,
-      name: "Mobile App",
-      description: "Build the mobile application",
-      status: "Planning",
-    },
-    {
-      id: 3,
-      name: "Payment Integration",
-      description: "Integrate the payment gateway",
-      status: "Completed",
-    },
-    {
-      id: 4,
-      name: "Web Design",
-      description: "Design a new website",
-      status: "Planning",
-    },
-  ]);
 
+  const { projects, setProjects } = useProjects();
   const totalProjects = projects.length;
   const inProgressProjects = projects.filter(
     (project) => project.status === "In Progress",
@@ -86,29 +54,7 @@ export default function Home() {
     (project) => project.id === projectToEdit,
   );
 
-  const [hasLoaded, setHasLoaded] = useState(false);
-
-  useEffect(() => {
-    const savedProjects = localStorage.getItem("taskflow-projects");
-
-    if (savedProjects) {
-      setProjects(JSON.parse(savedProjects));
-    }
-
-    setHasLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if(!hasLoaded) return;
-
-    localStorage.setItem("taskflow-projects", JSON.stringify(projects));
-  }, [projects, hasLoaded]);
-
-  function handleCreateProject(newProject: {
-    name: string;
-    description: string;
-    status: ProjectStatus;
-  }) {
+  function handleCreateProject(newProject: CreateProjectInput) {
     setProjects((currentProjects) => [
       ...currentProjects,
       {
@@ -126,11 +72,7 @@ export default function Home() {
     setProjectToDelete(id);
   }
 
-  function handleSaveEdit(updatedProject: {
-    name: string;
-    description: string;
-    status: ProjectStatus;
-  }) {
+  function handleSaveEdit(updatedProject: CreateProjectInput) {
     setProjects((currentProjects) =>
       currentProjects.map((project) =>
         project.id === projectToEdit
